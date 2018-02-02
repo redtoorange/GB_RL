@@ -1,6 +1,6 @@
 ﻿#include "EnemyManager.h"
 #include <iostream>
-#include "AStar.h"
+#include "PathFinder.h"
 #include "MapTile.h"
 
 #include "Enemy.h"
@@ -29,7 +29,7 @@ void EnemyManager::moveTowardPlayer( EnemyCharacter* enemy)
 	sf::Vector2i ePos = enemy->getGridPos();
 
 
-	currentPath = AStar::findPath( tileMap, enemy->getTile(), player->getTile());
+	currentPath = PathFinder::findPath( tileMap, enemy->getTile(), player->getTile());
 
 
 	if(currentPath.size() >= 2)

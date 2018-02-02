@@ -1,4 +1,4 @@
-﻿#include "AStar.h"
+﻿#include "PathFinder.h"
 
 #include "MapTile.h"
 #include <unordered_map>
@@ -7,7 +7,7 @@
 #include <iostream>
 using namespace std;
 
-double AStar::heuristic( MapTile* a, MapTile* b)
+double PathFinder::heuristic( MapTile* a, MapTile* b)
 {
 	auto aPos = a->getGridPos();
 	auto bPos = b->getGridPos();
@@ -21,7 +21,7 @@ bool operator<( const PQ_Element& l, const PQ_Element& r)
 	return l.second < r.second;
 }
 
-Path AStar::findPath(Map* map, MapTile* start, MapTile* goal)
+Path PathFinder::findPath(Map* map, MapTile* start, MapTile* goal)
 {
 	unordered_map<MapTile*, MapTile*> cameFrom;
 	unordered_map<MapTile*, double> costSoFar;
