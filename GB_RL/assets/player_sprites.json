@@ -1,0 +1,33 @@
+{
+	"tile_width" : 32,
+	"tile_height" : 32,
+		
+	"rogue" : {
+		"pos_x" : 0,
+		"pos_y" : 18
+	},
+	"druid" : {
+		"pos_x" : 1,
+		"pos_y" : 18
+	},
+	"barb" : {
+		"pos_x" : 2,
+		"pos_y" : 18
+	},
+	"gladiator" : {
+		"pos_x" : 3,
+		"pos_y" : 18
+	},
+	"ranger" : {
+		"pos_x" : 4,
+		"pos_y" : 18
+	},
+	"knight" : {
+		"pos_x" : 5,
+		"pos_y" : 18
+	},
+	"mage" : {
+		"pos_x" : 6,
+		"pos_y" : 18
+	}
+}

@@ -1,0 +1,37 @@
+{
+	"tile_width" : 32,
+	"tile_height" : 32,
+		
+	"rat" : {
+		"pos_x" : 0,
+		"pos_y" : 19
+	},
+	"tiny_spiders" : {
+		"pos_x" : 1,
+		"pos_y" : 19
+	},
+	"salamander" : {
+		"pos_x" : 2,
+		"pos_y" : 19
+	},
+	"giant_spider" : {
+		"pos_x" : 3,
+		"pos_y" : 19
+	},
+	"frog" : {
+		"pos_x" : 4,
+		"pos_y" : 19
+	},
+	"rhino_beetle" : {
+		"pos_x" : 5,
+		"pos_y" : 19
+	},
+	"millipede" : {
+		"pos_x" : 6,
+		"pos_y" : 19
+	},
+	"snek" : {
+		"pos_x" : 7,
+		"pos_y" : 19
+	}
+}
