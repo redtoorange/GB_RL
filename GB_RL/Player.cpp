@@ -138,11 +138,11 @@ void Player::calculateLOS()
 	int cX = currentTile->getGridPos().x;
 	int cY = currentTile->getGridPos().y;
 
-	for( int x = 0; x < 6; x++)
+	for( int x = -3; x < 6; x++)
 	{
-		for( int y = 0; y < 6; y++)
+		for( int y = -3; y < 6; y++)
 		{
-			MapTile* t = m->getTileByGrid(x-3, y-3);
+			MapTile* t = m->getTileByGrid(cX + x, cY + y);
 			if( t )
 			{
 				t->setVisibility(Visibility::VISIBLE);

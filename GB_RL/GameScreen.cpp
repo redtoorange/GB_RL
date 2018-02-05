@@ -14,6 +14,7 @@ using namespace std;
 GameScreen::GameScreen(Game* game)
 	:Screen(game), gb_view({ GB_WINDOW_WIDTH, GB_WINDOW_HEIGHT }, sf::Vector2f{ 0, 0 }, sf::Vector2f(GB_WINDOW_WIDTH, GB_WINDOW_HEIGHT))
 {
+
 	// Make the map
 	tileMap = make_unique<Map>( *asset_manager.getTexture(), asset_manager);
 	

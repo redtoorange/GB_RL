@@ -31,6 +31,7 @@ MapTile* Map::getFreeTile()
 }
 
 Map::Map(const sf::Texture& spriteSheet, AssetManager& manager)
+	:validRenderState(false)
 {
 	state.texture = &spriteSheet;
 	MapGenerator generator{5, 5, 80, 80, 5, 10, 3, 10};
@@ -264,7 +265,12 @@ void Map::updateTiles(float deltaTime)
 
 void Map::createVertexArray()
 {
-	renderBatches.clear();
+	for( auto& batch : renderBatches )
+	{
+		batch.second.clear();
+	}
+
+
 	sf::VertexArray* verts = nullptr;
 	
 	bool initial = false;
@@ -273,9 +279,13 @@ void Map::createVertexArray()
 	{
 		for( int y = 0; y < height; y++)
 		{
+			const MapTile* tile =  &tileMap[x][y];
+
+			//if( tile->getVisibility() != Visibility::VISIBLE ) continue;
+
 			sf::Vertex quad[4];
 
-			const MapTile* tile =  &tileMap[x][y];
+			
 			const sf::Sprite& s = tile->getSprite();
 			const sf::Texture* t = s.getTexture();
 
@@ -301,7 +311,7 @@ void Map::createVertexArray()
 			quad[2].texCoords = sf::Vector2f(trect.left + trect.width, trect.top + trect.height);
 			quad[3].texCoords = sf::Vector2f(trect.left, trect.top + trect.height);
 
-			sf::Color c = tile->getColor();
+			const sf::Color c = s.getColor();
 			quad[0].color = c;
 			quad[1].color = c;
 			quad[2].color = c;
@@ -319,15 +329,18 @@ void Map::createVertexArray()
 
 void Map::drawMap(sf::RenderWindow& window)
 {
-	if( !validRenderState ) 
-		createVertexArray();
-
-
+//	if( !validRenderState ) 
+//		createVertexArray();
+//
+//
+	createVertexArray();
 	for( auto& batch : renderBatches)
 	{
 		state.texture = batch.first;
 		window.draw(batch.second, state);
 	}
+
+
 
 	// Draw fully visible
 //	for( int x = 0; x < width; x++)
@@ -339,21 +352,21 @@ void Map::drawMap(sf::RenderWindow& window)
 //
 //			if( vis == Visibility::VISIBLE )
 //			{
-//				tile->setVisibility(Visibility::IN_SHADOW);
+////				tile->setVisibility(Visibility::IN_SHADOW);
 //				//Tile fully lit, render it
+//				tile->draw( window );
+//			}
+//			else if( vis == Visibility::IN_SHADOW )
+//			{
+//				//Tile in shadow
+//				// Add tile to shadow render batch
+//				tile->draw( window );
+//			}
+//			else
+//			{
+//				//Tile Hidden, do NOT draw!
 //				//tile->draw( window );
 //			}
-////			else if( vis == Visibility::IN_SHADOW )
-////			{
-////				//Tile in shadow
-////				// Add tile to shadow render batch
-////				tile->draw( window );
-////			}
-////			else
-////			{
-////				//Tile Hidden, do NOT draw!
-////				//tile->draw( window );
-////			}
 //		}
 //	}
 

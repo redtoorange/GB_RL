@@ -4,9 +4,10 @@
 #include <iostream>
 #include "Map.h"
 
-MapTile::MapTile( Map* parent)
+MapTile::MapTile( Map* parent, Visibility vis)
 	:parent(parent)
 {
+	setVisibility(vis);
 }
 
 MapTile::MapTile(const MapTile& other)
@@ -56,7 +57,9 @@ void MapTile::setWorldPos(const sf::Vector2f& pos)
 
 void MapTile::setSprite(const sf::Sprite& sprite)
 {
+	const sf::Color col = mapSprite.getColor();
 	mapSprite = sprite;
+	mapSprite.setColor(col);
 	mapSprite.setPosition( worldPos );
 	mapSprite.setOrigin(16, 16);
 }
@@ -205,16 +208,19 @@ void MapTile::setVisibility(Visibility vis)
 
 	switch (visible)
 	{
-	case Visibility::VISIBLE:
-		setColor( sf::Color::White);
-		break;
-	case Visibility::IN_SHADOW:
-		setColor( sf::Color(74, 74, 74, 255));
-		break;
-	case Visibility::HIDDEN:
-		setColor( sf::Color::Black);
-		break;
+		case Visibility::VISIBLE:
+			setColor( sf::Color::White);
+			break;
+
+		case Visibility::IN_SHADOW:
+			setColor( sf::Color(74, 74, 74, 255) );
+			break;
+
+		case Visibility::HIDDEN:
+			setColor( sf::Color(0, 0, 0, 255) );
+			break;
 	}
 
-	parent->invalidateTileBatches();
+	if( parent )
+		parent->invalidateTileBatches();
 }

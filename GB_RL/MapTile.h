@@ -14,7 +14,7 @@ class Character;
 class MapTile
 {
 public:
-	MapTile( Map* parent = nullptr);
+	MapTile( Map* parent = nullptr, Visibility vis = Visibility::HIDDEN);
 	MapTile( const MapTile& other);
 	MapTile& operator=(const MapTile& other);
 
@@ -54,7 +54,7 @@ public:
 	void setVisibility( Visibility vis);
 
 private:
-	Visibility visible = Visibility::HIDDEN;
+	Visibility visible;
 
 	sf::Vector2i gridPos;
 	sf::Vector2f worldPos;
