@@ -15,7 +15,7 @@ GameScreen::GameScreen(Game* game)
 	:Screen(game), gb_view({ GB_WINDOW_WIDTH, GB_WINDOW_HEIGHT }, sf::Vector2f{ 0, 0 }, sf::Vector2f(GB_WINDOW_WIDTH, GB_WINDOW_HEIGHT))
 {
 	// Make the map
-	tileMap = make_unique<Map>( *asset_manager.getTexture());
+	tileMap = make_unique<Map>( *asset_manager.getTexture(), asset_manager);
 	
 
 	// Create some people for the map
@@ -23,8 +23,8 @@ GameScreen::GameScreen(Game* game)
 	
 	enemy_manager.setMap(tileMap.get());
 	enemy_manager.setPlayer( player.get() );
-	enemy_manager.addEnemy( new EnemyCharacter({ *asset_manager.getTexture(), asset_manager.getRect(ENEMY, RAT) }, "Rat", tileMap->getTileByGrid(2, 9)));
-	enemy_manager.addEnemy( new EnemyCharacter({ *asset_manager.getTexture(), asset_manager.getRect(ENEMY, T_SPIDER) }, "Tiny Spider", tileMap->getTileByGrid(3, 9)));
+	enemy_manager.addEnemy( new EnemyCharacter({ *asset_manager.getTexture(), asset_manager.getRect(ENEMY, RAT) }, "Rat", tileMap->getFreeTile()));
+	enemy_manager.addEnemy( new EnemyCharacter({ *asset_manager.getTexture(), asset_manager.getRect(ENEMY, T_SPIDER) }, "Tiny Spider", tileMap->getFreeTile()));
 
 	gb_view.setCenter(player->getPosition());
 }

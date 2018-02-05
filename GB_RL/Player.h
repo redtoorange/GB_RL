@@ -19,11 +19,13 @@ public:
 	bool shouldEnemiesTick() const;
 	void setEnemiesShouldTick( bool tick );
 
+	void calculateLOS();
+
 private:
 	bool moved = false;
 	bool enemiesShouldTick = false;
 
-	float movementDelay = .25f;
+	float movementDelay = .2f;
 	float delayRemaining = 0.0f;
 
 	void movement( float deltaTime );

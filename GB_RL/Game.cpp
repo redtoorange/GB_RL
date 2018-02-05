@@ -7,7 +7,7 @@
 Game::Game()
 	:window( sf::VideoMode{WINDOW_WIDTH, WINDOW_HEIGHT}, "SFML Window")
 {
-	window.setFramerateLimit(144);
+//	window.setFramerateLimit(144);
 	screens.emplace(ScreenType::PLAYING, make_unique<GameScreen>(this));
 	screens.emplace(ScreenType::MAIN_MENU, make_unique<MainMenuScreen>(this, window));
 
@@ -41,7 +41,7 @@ void Game::update(float delta )
 
 void Game::draw()
 {
-	window.clear(sf::Color{202, 220, 159, 255});
+	window.clear(sf::Color{74, 74, 74, 255});
 
 	// Do the drawing
 	currentScreen->draw( window );

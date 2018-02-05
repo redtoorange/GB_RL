@@ -1,6 +1,7 @@
 ﻿#include "Enemy.h"
 
 #include "EnemyManager.h"
+#include "MapTile.h"
 #include <iostream>
 
 EnemyCharacter::EnemyCharacter(const sf::Sprite& sprite, const std::string& name, Map* map, int x, int y)
@@ -37,4 +38,11 @@ void EnemyCharacter::takeDamage(int amount)
 EnemyCharacter::~EnemyCharacter()
 {
 	std::cout << "Enemy Destroyed\n";
+}
+
+
+void EnemyCharacter::draw(sf::RenderWindow& window) const
+{
+	if( currentTile->getVisibility() == Visibility::VISIBLE )
+		Character::draw(window);
 }

@@ -5,12 +5,14 @@
 #include "MapTile.h"
 #include "Item.h"
 
+class AssetManager;
+
 class Map
 {
 public:
 	Map();
 	Map( int width, int height, const sf::Texture& spriteSheet);
-	Map( const sf::Texture& spriteSheet);
+	Map( const sf::Texture& spriteSheet, AssetManager& manager);
 
 	void generateMap( int width, int height, const sf::Texture& spriteSheet);
 
@@ -20,6 +22,8 @@ public:
 	MapTile* getTileByWorld( const sf::Vector2f& pos );
 	MapTile* getTileByGrid( int x, int y);
 	MapTile* getFreeTile();
+
+	void invalidateTileBatches();
 
 private:
 	void createVertexArray();
@@ -35,9 +39,9 @@ private:
 
 	Item chest;
 
-	sf::VertexArray verts;
-	sf::RenderStates states;
+	std::map<const sf::Texture*, sf::VertexArray> renderBatches;
+	std::map<const sf::Texture*, sf::VertexArray> shadowBatches;
+	sf::RenderStates state;
 
 	bool validRenderState = false;
-//	sf::Sprite chest;
 };

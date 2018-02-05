@@ -1,6 +1,7 @@
 ﻿#include "Map.h"
 #include "MapGenerator.h"
 #include <iostream>
+#include "AssetManager.h"
 
 Map::Map()
 {
@@ -14,21 +15,24 @@ Map::Map(int width, int height, const sf::Texture& spriteSheet)
 
 MapTile* Map::getFreeTile()
 {
-	for( int x = 0; x < width; x++)
+	bool found = false;
+	int tries = 0;
+
+	while( tries++ < 1000)
 	{
-		for( int y = 0; y < height; y++)
-		{
-			if( !tileMap[x][y].isWall() && tileMap[x][y].getOccupier() == nullptr)
+		int x = randInt(0, width);
+		int y = randInt(0, height);
+
+		if( !tileMap[x][y].isWall() && tileMap[x][y].getOccupier() == nullptr)
 				return &tileMap[x][y];
-		}
 	}
 
 	return nullptr;
 }
 
-Map::Map(const sf::Texture& spriteSheet)
+Map::Map(const sf::Texture& spriteSheet, AssetManager& manager)
 {
-	states.texture = &spriteSheet;
+	state.texture = &spriteSheet;
 	MapGenerator generator{5, 5, 80, 80, 5, 10, 3, 10};
 	auto map = generator.create();
 
@@ -51,16 +55,19 @@ Map::Map(const sf::Texture& spriteSheet)
 
 			if( map[x][y] == static_cast<char>(FLOOR))
 			{
-				tileMap[x][y].setSprite(sf::Sprite{spriteSheet, {0 * SPRITE_WIDTH, 1 * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT}});
+//				tileMap[x][y].setSprite(sf::Sprite{spriteSheet, {0 * SPRITE_WIDTH, 1 * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT}});
+				tileMap[x][y].setSprite(sf::Sprite{*manager.getTexture("floor")});
 			}
 			else if( map[x][y] == static_cast<char>(WALL))
 			{
-				tileMap[x][y].setSprite(sf::Sprite{spriteSheet, {1 * SPRITE_WIDTH, 1 * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT}});
+//				tileMap[x][y].setSprite(sf::Sprite{spriteSheet, {1 * SPRITE_WIDTH, 1 * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT}});
+				tileMap[x][y].setSprite(sf::Sprite{*manager.getTexture("wall")});
 				tileMap[x][y].setIsWall(true);
 			}
 			else if( map[x][y] == static_cast<char>(CLOSED_DOOR))
 			{
-				tileMap[x][y].setSprite(sf::Sprite{spriteSheet, {5 * SPRITE_WIDTH, 2 * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT}});
+//				tileMap[x][y].setSprite(sf::Sprite{spriteSheet, {5 * SPRITE_WIDTH, 2 * SPRITE_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT}});
+				tileMap[x][y].setSprite(sf::Sprite{*manager.getTexture("door")});
 			}
 				
 		}
@@ -257,8 +264,8 @@ void Map::updateTiles(float deltaTime)
 
 void Map::createVertexArray()
 {
-	verts.clear();
-	verts.setPrimitiveType(sf::Quads);
+	renderBatches.clear();
+	sf::VertexArray* verts = nullptr;
 	
 	bool initial = false;
 
@@ -268,7 +275,19 @@ void Map::createVertexArray()
 		{
 			sf::Vertex quad[4];
 
-			const sf::Sprite& s = tileMap[x][y].getSprite();
+			const MapTile* tile =  &tileMap[x][y];
+			const sf::Sprite& s = tile->getSprite();
+			const sf::Texture* t = s.getTexture();
+
+			auto iter = renderBatches.find(t);
+			if( iter == renderBatches.end() )
+			{
+				std::cout << "Created a new Vertext Array for a texture\n";
+				renderBatches.emplace(t, sf::VertexArray(sf::Quads));
+				iter = renderBatches.find(t);
+			}
+			verts = &iter->second;
+
 			auto bound = s.getGlobalBounds();
 			auto trect = s.getTextureRect();
 
@@ -281,11 +300,17 @@ void Map::createVertexArray()
 			quad[1].texCoords = sf::Vector2f(trect.left + trect.width, trect.top);
 			quad[2].texCoords = sf::Vector2f(trect.left + trect.width, trect.top + trect.height);
 			quad[3].texCoords = sf::Vector2f(trect.left, trect.top + trect.height);
+
+			sf::Color c = tile->getColor();
+			quad[0].color = c;
+			quad[1].color = c;
+			quad[2].color = c;
+			quad[3].color = c;
 	
-			verts.append(quad[0]);
-			verts.append(quad[1]);
-			verts.append(quad[2]);
-			verts.append(quad[3]);
+			verts->append(quad[0]);
+			verts->append(quad[1]);
+			verts->append(quad[2]);
+			verts->append(quad[3]);
 		}
 	}
 
@@ -296,51 +321,46 @@ void Map::drawMap(sf::RenderWindow& window)
 {
 	if( !validRenderState ) 
 		createVertexArray();
-//	sf::RectangleShape rectangle;
-//	rectangle.setSize(sf::Vector2f(32, 32));
-//	rectangle.setOrigin(16, 16);
-//	
-//	rectangle.setFillColor(sf::Color{0, 0, 0, 0});
-//	
-//	rectangle.setOutlineColor(sf::Color::Green);
-//	rectangle.setOutlineThickness(-1);
-//	sf::RenderStates states;
-//
-//
-//	sf::Vertex quad[4];
-//
-//	sf::Sprite s;
-//	auto bound = s.getGlobalBounds();
-//	auto trect = s.getTextureRect();
-//
-//	quad[0].position = sf::Vector2f(bound.left, bound.top);
-//	quad[1].position = sf::Vector2f(bound.left, bound.top+height);
-//	quad[2].position = sf::Vector2f(bound.left + bound.width, bound.top+bound.height);
-//	quad[3].position = sf::Vector2f(bound.left+bound.width, bound.top);
-//
-//	quad[0].texCoords = sf::Vector2f(trect.left, trect.top);
-//	quad[1].texCoords = sf::Vector2f(trect.left, trect.top+height);
-//	quad[2].texCoords = sf::Vector2f(trect.left + trect.width, trect.top+trect.height);
-//	quad[3].texCoords = sf::Vector2f(trect.left+trect.width, trect.top);
-//	
-	//verts.append(quad);
-	
-//	states.transform = window.getView().getTransform();
-	
-//	window.draw(verts);
-	window.draw(verts, states);
 
 
+	for( auto& batch : renderBatches)
+	{
+		state.texture = batch.first;
+		window.draw(batch.second, state);
+	}
+
+	// Draw fully visible
 //	for( int x = 0; x < width; x++)
 //	{
 //		for( int y = 0; y < height; y++)
 //		{
-//			tileMap[x][y].draw( window );
-//			//window.draw( tileMap[x][y].getSprite());
+//			MapTile* tile = &tileMap[x][y];
+//			Visibility vis = tile->getVisibility();
 //
-//			//rectangle.setPosition(tileMap[x][y].getWorldPos());
-//			//window.draw(rectangle);
+//			if( vis == Visibility::VISIBLE )
+//			{
+//				tile->setVisibility(Visibility::IN_SHADOW);
+//				//Tile fully lit, render it
+//				//tile->draw( window );
+//			}
+////			else if( vis == Visibility::IN_SHADOW )
+////			{
+////				//Tile in shadow
+////				// Add tile to shadow render batch
+////				tile->draw( window );
+////			}
+////			else
+////			{
+////				//Tile Hidden, do NOT draw!
+////				//tile->draw( window );
+////			}
 //		}
+//	}
+
+//	for( auto& batch : renderBatches)
+//	{
+//		state.texture = batch.first;
+//		window.draw(batch.second, state);
 //	}
 }
 
@@ -364,4 +384,9 @@ MapTile* Map::getTileByWorld(const sf::Vector2f& pos)
 	}
 
 	return tile;
+}
+
+void Map::invalidateTileBatches()
+{
+	validRenderState = false;
 }

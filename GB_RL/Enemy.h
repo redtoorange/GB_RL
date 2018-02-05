@@ -13,6 +13,8 @@ public:
 	virtual int dealDamage() override;
 	virtual void takeDamage(int amount) override;
 
+
+	virtual void draw(sf::RenderWindow& window) const override;
 private:
 	EnemyManager* manager = nullptr;
 };

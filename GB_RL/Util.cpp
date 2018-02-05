@@ -18,7 +18,7 @@ float distance(const sf::Vector2f& a, const  sf::Vector2f& b)
 
 int randInt(int min, int max)
 {
-	return min + (rand() % (max - min + 1));
+	return min + (rand() % (max - min));
 }
 
 

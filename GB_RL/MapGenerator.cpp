@@ -61,13 +61,14 @@ void MapGenerator::connectRooms()
 			unconnected.push_back(&rooms[x][y]);
 		}	
 	}
-	random_shuffle(unconnected.begin(), unconnected.end());
+
+	std::shuffle(unconnected.begin(), unconnected.end(), g );
 
 	vector<sf::Vector2i> dirToCheck = {UP, DOWN, LEFT, RIGHT}; 
 
 	for( Room* room : unconnected)
 	{
-		random_shuffle(dirToCheck.begin(), dirToCheck.end());
+		shuffle(dirToCheck.begin(), dirToCheck.end(), g);
 		for(auto& dir : dirToCheck)
 		{
 			int nextX = room->x + dir.x;
@@ -103,7 +104,7 @@ void MapGenerator::connectUnconnectedRooms()
 			if( room->connections.empty())
 			{
 				vector<sf::Vector2i> dirToCheck = {UP, DOWN, LEFT, RIGHT}; 
-				random_shuffle(dirToCheck.begin(), dirToCheck.end());
+				shuffle(dirToCheck.begin(), dirToCheck.end(), g);
 
 				bool validRoom = false;
 				Room* otherRoom = nullptr;
@@ -290,35 +291,25 @@ void MapGenerator::createRooms()
 }
 
 sf::Vector2i getCardinalDirection(int x, int y) {
-	sf::Vector2i Cardinals[] = {UP, DOWN, LEFT, RIGHT};
     if (x == 0 && y == 0) {
         return {0, 0};
     }
 
     int absx = abs(x);
-
-    if (y > absx) {
-        return UP;
-    }
-
-    int absy = abs(y);
-
-    if (absy > absx) {
+	if (y > absx) {
         return DOWN;
     }
 
+    int absy = abs(y);
+	if (absy > absx) {
+        return UP;
+    }
+
     if (x > 0) {
-        if (-y == x) {//on diagonal
-            return DOWN;
-        }
         return RIGHT;
     }
 
-    if (y == x) {//on diagonal
-        return UP;
-    }
     return LEFT;
-
 }
 
 
@@ -418,8 +409,14 @@ void MapGenerator::createCorridors()
             for (Room* otherRoom : room->connections) 
 			{
                 sf::Vector2i dir = getCardinalDirection(otherRoom->cellx - room->cellx, otherRoom->celly - room->celly);
-                digPath(randomWallPosition(room, dir), randomWallPosition(otherRoom, opposite(dir) ));
-            }
+                digPath( randomWallPosition(room, dir), randomWallPosition(otherRoom, opposite(dir) ) );
+
+				auto iter = find(otherRoom->connections.begin(), otherRoom->connections.end(), room);
+            	if(  iter != otherRoom->connections.end() )
+            	{
+            		otherRoom->connections.erase(iter);
+            	}
+			}
         }
     }
 }
@@ -429,7 +426,7 @@ MapGenerator::MapGenerator(int horizontalRooms, int verticalRooms, int dungeonWi
 	: horizontalRooms(horizontalRooms), verticalRooms(verticalRooms),
 		dungeonWidth(dungeonWidth), dungeonHeight(dungeonHeight), 
 		minRoomWidth(minRoomWidth), maxRoomWidth(maxRoomWidth), 
-		minRoomHeight(minRoomHeight), maxRoomHeight(maxRoomHeight)
+		minRoomHeight(minRoomHeight), maxRoomHeight(maxRoomHeight), g(rd())
 {
 }
 

@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "Util.h"
 
+#include <random>
+#include <algorithm>
+
 struct Room
 {
 	Room(int x, int y, int width, int height, int cellx, int celly);
@@ -68,5 +71,8 @@ private:
 
 	bool contains( Room* a, Room* b);
 	sf::Vector2i opposite( const sf::Vector2i& dir);
+
+	std::random_device rd;
+    std::mt19937 g;
 };
 

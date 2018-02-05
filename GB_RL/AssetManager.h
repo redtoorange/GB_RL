@@ -40,6 +40,7 @@ public:
 	
 	sf::Texture* getTexture();
 	sf::IntRect getRect( AssetType type, int name );
+	sf::Texture* getTexture( const std::string& name );
 
 private:
 	sf::Texture gameTexture;
@@ -49,4 +50,6 @@ private:
 
 	void readFile( const std::string& path, json& dest );
 	sf::IntRect parseRect(json& data, const std::string& index);
+
+	std::map<std::string, sf::Texture> textures;
 };

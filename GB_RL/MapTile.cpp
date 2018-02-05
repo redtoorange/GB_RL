@@ -2,6 +2,7 @@
 
 #include "Item.h"
 #include <iostream>
+#include "Map.h"
 
 MapTile::MapTile( Map* parent)
 	:parent(parent)
@@ -140,6 +141,11 @@ void MapTile::setColor( const sf::Color& color)
 }
 
 
+const sf::Color& MapTile::getColor() const
+{
+	return mapSprite.getColor();
+}
+
 Map* MapTile::getParent() const
 {
 	return parent;
@@ -184,4 +190,31 @@ bool MapTile::isWall() const
 std::vector<Item*>& MapTile::getItems()
 {
 	return items;
+}
+
+Visibility MapTile::getVisibility() const
+{
+	return visible;
+}
+
+void MapTile::setVisibility(Visibility vis)
+{
+	if( vis == visible ) return;
+
+	visible = vis;
+
+	switch (visible)
+	{
+	case Visibility::VISIBLE:
+		setColor( sf::Color::White);
+		break;
+	case Visibility::IN_SHADOW:
+		setColor( sf::Color(74, 74, 74, 255));
+		break;
+	case Visibility::HIDDEN:
+		setColor( sf::Color::Black);
+		break;
+	}
+
+	parent->invalidateTileBatches();
 }

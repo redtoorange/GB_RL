@@ -21,6 +21,7 @@ void Player::setup()
 {
 	hp = 25;
 	damage = 5;
+	//calculateLOS();
 }
 
 void Player::draw(sf::RenderWindow& window) const
@@ -87,6 +88,7 @@ void Player::movement( float deltaTime )
 		if (attempted && attempted->canBeEntered())
 		{
 			moveToTile(attempted);
+			calculateLOS();
 			enemiesShouldTick = true;
 		}
 		else
@@ -127,4 +129,25 @@ int Player::dealDamage()
 void Player::takeDamage(int amount)
 {
 	Character::takeDamage(amount);
+}
+
+void Player::calculateLOS()
+{
+	Map* m = currentTile->getParent();
+
+	int cX = currentTile->getGridPos().x;
+	int cY = currentTile->getGridPos().y;
+
+	for( int x = 0; x < 6; x++)
+	{
+		for( int y = 0; y < 6; y++)
+		{
+			MapTile* t = m->getTileByGrid(x-3, y-3);
+			if( t )
+			{
+				t->setVisibility(Visibility::VISIBLE);
+			}
+		}
+	}
+
 }

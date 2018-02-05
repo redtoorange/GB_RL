@@ -12,26 +12,30 @@ std::string pClasses[] = { "rogue", "driud", "barb", "gladiator", "ranger", "kni
 std::string enemies[] = { "rat", "tiny_spiders", "salamander", "giant_spider", "frog", "rhino_beetle", "millipede", "snek" };
 
 
+
 AssetManager::AssetManager()
 {
-	#if defined( DEBUGGING )
-		cout << "Parsing <" << ENEMY_PATH << ">\n";
-	#endif
-
 	readFile(ENEMY_PATH, enemy_sprites);
-	 
-	#if defined( DEBUGGING )
-		cout << "\tFinished...\n";
-		cout << "Parsing <" << ENEMY_PATH << ">\n";
-	#endif
-
 	readFile(PLAYER_PATH, player_sprites);
 
-	#if defined( DEBUGGING )
-		cout << "\tFinished...\n";
-	#endif
-
 	gameTexture.loadFromFile(TEXTURE_PATH);
+
+	sf::Texture temp;
+
+	temp.loadFromFile("assets/wall/brick_gray_0.png");
+	textures.emplace("wall", temp);
+
+	temp.loadFromFile("assets/floor/cobble_blood_1_new.png");
+	textures.emplace("floor", temp);
+
+	temp.loadFromFile("assets/doors/closed_door.png");
+	textures.emplace("door", temp);
+}
+
+
+sf::Texture* AssetManager::getTexture(const std::string& name)
+{
+	return &textures[name];
 }
 
 void AssetManager::readFile(const std::string& path, json& dest)
@@ -50,10 +54,6 @@ void AssetManager::readFile(const std::string& path, json& dest)
 
 		fis.seek(pos);
 	}
-
-#	if defined(DEBUGGING)
-		cout << stream.str();
-	#endif
 
 	stream >> dest;
 }

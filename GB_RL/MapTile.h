@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 //#include "Item.h"
 #include <stack>
+#include "Util.h"
 
 class Map;
 class Item;
@@ -39,6 +40,7 @@ public:
 	std::vector<MapTile* >& getNeighbors();
 
 	void setColor( const sf::Color& color);
+	const sf::Color& getColor( ) const;
 
 	Map* getParent() const;
 	void setParent(Map* m);
@@ -48,7 +50,12 @@ public:
 	void setIsWall(bool wall);
 	int getCost() const;
 
+	Visibility getVisibility() const;
+	void setVisibility( Visibility vis);
+
 private:
+	Visibility visible = Visibility::HIDDEN;
+
 	sf::Vector2i gridPos;
 	sf::Vector2f worldPos;
 
