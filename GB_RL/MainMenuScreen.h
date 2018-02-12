@@ -4,7 +4,6 @@
 #include <memory>
 #include <TGUI/TGUI.hpp>
 #include "CameraManager.h"
-using namespace tgui;
 
 class sf::RenderWindow;
 
@@ -23,8 +22,8 @@ public:
 
 	void handleEvent(sf::Event& event) override;
 private:
-	std::unique_ptr<Gui> gui;
-	std::shared_ptr<ChildWindow> cWindow;
+	std::unique_ptr<tgui::Gui> gui;
+	std::shared_ptr<tgui::ChildWindow> cWindow;
 	CameraManager manager;
 
 	void exitGameCall();

@@ -26,7 +26,7 @@ public:
 	void invalidateTileBatches();
 
 private:
-	void createVertexArray();
+	void createVertexArray( const sf::FloatRect& rect );
 
 
 	const int SPRITE_WIDTH = 32;

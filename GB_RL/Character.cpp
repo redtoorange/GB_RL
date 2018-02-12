@@ -72,6 +72,7 @@ void Character::moveToTile(MapTile* tile, bool smooth)
 	
 	if( currentTile)
 	{
+		currentTile->setOccupier(this);
 		if( smooth )
 		{
 			destination = currentTile->getWorldPos();
@@ -81,7 +82,6 @@ void Character::moveToTile(MapTile* tile, bool smooth)
 		{
 			setPosition(currentTile->getWorldPos());
 		}
-		currentTile->setOccupier(this);
 	}
 }
 

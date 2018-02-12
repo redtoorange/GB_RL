@@ -263,7 +263,7 @@ void Map::updateTiles(float deltaTime)
 	}
 }
 
-void Map::createVertexArray()
+void Map::createVertexArray( const sf::FloatRect& viewRect)
 {
 	for( auto& batch : renderBatches )
 	{
@@ -280,13 +280,15 @@ void Map::createVertexArray()
 		for( int y = 0; y < height; y++)
 		{
 			const MapTile* tile =  &tileMap[x][y];
+			const sf::Sprite& s = tile->getSprite();
+			sf::FloatRect bound = s.getGlobalBounds();
 
-			//if( tile->getVisibility() != Visibility::VISIBLE ) continue;
+			if( tile->getVisibility() != Visibility::VISIBLE || bound.intersects(viewRect) ) continue;
 
 			sf::Vertex quad[4];
 
 			
-			const sf::Sprite& s = tile->getSprite();
+			
 			const sf::Texture* t = s.getTexture();
 
 			auto iter = renderBatches.find(t);
@@ -298,7 +300,7 @@ void Map::createVertexArray()
 			}
 			verts = &iter->second;
 
-			auto bound = s.getGlobalBounds();
+			
 			auto trect = s.getTextureRect();
 
 			quad[0].position = sf::Vector2f(bound.left, bound.top);
@@ -333,7 +335,8 @@ void Map::drawMap(sf::RenderWindow& window)
 //		createVertexArray();
 //
 //
-	createVertexArray();
+//	window.getView().getViewport();
+	createVertexArray( window.getView().getViewport() );
 	for( auto& batch : renderBatches)
 	{
 		state.texture = batch.first;
@@ -356,17 +359,17 @@ void Map::drawMap(sf::RenderWindow& window)
 //				//Tile fully lit, render it
 //				tile->draw( window );
 //			}
-//			else if( vis == Visibility::IN_SHADOW )
-//			{
-//				//Tile in shadow
-//				// Add tile to shadow render batch
-//				tile->draw( window );
-//			}
-//			else
-//			{
-//				//Tile Hidden, do NOT draw!
-//				//tile->draw( window );
-//			}
+////			else if( vis == Visibility::IN_SHADOW )
+////			{
+////				//Tile in shadow
+////				// Add tile to shadow render batch
+////				tile->draw( window );
+////			}
+////			else
+////			{
+////				//Tile Hidden, do NOT draw!
+////				//tile->draw( window );
+////			}
 //		}
 //	}
 

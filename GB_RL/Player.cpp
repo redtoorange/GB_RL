@@ -133,21 +133,27 @@ void Player::takeDamage(int amount)
 
 void Player::calculateLOS()
 {
-	Map* m = currentTile->getParent();
-
-	int cX = currentTile->getGridPos().x;
-	int cY = currentTile->getGridPos().y;
-
-	for( int x = -3; x < 6; x++)
+	if( currentTile )
 	{
-		for( int y = -3; y < 6; y++)
+		Map* m = currentTile->getParent();
+
+		int cX = currentTile->getGridPos().x;
+		int cY = currentTile->getGridPos().y;
+
+		for( int x = -3; x < 6; x++)
 		{
-			MapTile* t = m->getTileByGrid(cX + x, cY + y);
-			if( t )
+			for( int y = -3; y < 6; y++)
 			{
-				t->setVisibility(Visibility::VISIBLE);
+				MapTile* t = m->getTileByGrid(cX + x, cY + y);
+				if( t )
+				{
+					t->setVisibility(Visibility::VISIBLE);
+				}
 			}
 		}
 	}
-
+	else
+	{
+		std::cout << "Current Tile was NULL\n";	
+	}
 }

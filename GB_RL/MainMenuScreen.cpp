@@ -2,7 +2,7 @@
 
 #include "Game.h"
 #include <iostream>
-
+using namespace tgui;
 
 MainMenuScreen::MainMenuScreen(Game* game, sf::RenderWindow& window)
 	: Screen(game), manager({GB_WINDOW_WIDTH, GB_WINDOW_HEIGHT})

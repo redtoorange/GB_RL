@@ -8,12 +8,12 @@ enum class Visibility
 	HIDDEN, IN_SHADOW, VISIBLE
 };
 
-constexpr unsigned int WINDOW_WIDTH = 800*2;
-constexpr unsigned int WINDOW_HEIGHT = 600*2;
+constexpr unsigned int WINDOW_WIDTH = 800;
+constexpr unsigned int WINDOW_HEIGHT = 600;
 
-const unsigned int GB_WINDOW_WIDTH = 160 * 6;
+const unsigned int GB_WINDOW_WIDTH = 160 * 2;
 //const unsigned int GB_WINDOW_WIDTH = 160 * 2;
-const unsigned int GB_WINDOW_HEIGHT = 144 * 6;
+const unsigned int GB_WINDOW_HEIGHT = 144 * 2;
 //const unsigned int GB_WINDOW_HEIGHT = 144 * 2;
 
 const sf::Vector2i UP{0, -1};
