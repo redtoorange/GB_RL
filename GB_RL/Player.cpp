@@ -135,6 +135,12 @@ void Player::calculateLOS()
 {
 	if( currentTile )
 	{
+		for( MapTile* t : visibleTiles)
+		{
+			t->setVisibility( Visibility::IN_SHADOW );
+		}
+		visibleTiles.clear();
+
 		Map* m = currentTile->getParent();
 
 		int cX = currentTile->getGridPos().x;
@@ -147,9 +153,14 @@ void Player::calculateLOS()
 				MapTile* t = m->getTileByGrid(cX + x, cY + y);
 				if( t )
 				{
-					t->setVisibility(Visibility::VISIBLE);
+					visibleTiles.push_back( t );
 				}
 			}
+		}
+
+		for( MapTile* t : visibleTiles)
+		{
+			t->setVisibility( Visibility::VISIBLE );
 		}
 	}
 	else

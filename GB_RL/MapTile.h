@@ -45,6 +45,7 @@ public:
 	Map* getParent() const;
 	void setParent(Map* m);
 	bool canBeEntered();
+	bool allNeighborsWall();
 	
 	bool isWall() const;
 	void setIsWall(bool wall);
@@ -69,4 +70,6 @@ private:
 
 	bool wall = false;
 	int costToEnter = 1;
+	int numWalls = -1;
+
 };

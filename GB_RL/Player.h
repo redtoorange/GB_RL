@@ -22,6 +22,8 @@ public:
 	void calculateLOS();
 
 private:
+	std::vector<MapTile*> visibleTiles;
+
 	bool moved = false;
 	bool enemiesShouldTick = false;
 

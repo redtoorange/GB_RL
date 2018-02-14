@@ -224,3 +224,19 @@ void MapTile::setVisibility(Visibility vis)
 	if( parent )
 		parent->invalidateTileBatches();
 }
+
+bool MapTile::allNeighborsWall()
+{
+	if( numWalls < 0 )
+	{
+		numWalls = 0;
+		for( MapTile* w : neighbors)
+		{
+			if( w->isWall() )
+				numWalls++;
+		}
+		std::cout << numWalls << std::endl;
+	}
+	
+	return numWalls == 8;
+}

@@ -81,7 +81,7 @@ Map::Map(const sf::Texture& spriteSheet, AssetManager& manager)
 		{
 			MapTile& current = tileMap[x][y];
 
-			if( current.isWall() ) continue;
+			//if( current.isWall() ) continue;
 
 			// Up
 			if( y > 0)
@@ -279,11 +279,12 @@ void Map::createVertexArray( const sf::FloatRect& viewRect)
 	{
 		for( int y = 0; y < height; y++)
 		{
-			const MapTile* tile =  &tileMap[x][y];
+			MapTile* tile =  &tileMap[x][y];
 			const sf::Sprite& s = tile->getSprite();
 			sf::FloatRect bound = s.getGlobalBounds();
 
-			if( tile->getVisibility() != Visibility::VISIBLE || bound.intersects(viewRect) ) continue;
+			if( tile->getVisibility() == Visibility::HIDDEN || bound.intersects(viewRect) || tile->allNeighborsWall() )  
+				continue;
 
 			sf::Vertex quad[4];
 
